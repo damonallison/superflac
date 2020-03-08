@@ -58,15 +58,6 @@ func verifyDeps() bool {
 	return true
 }
 
-// Creates an MP3 path for the given flac path.
-//
-// Example:
-//    /test/test.flac => /test/mp3/flac.mp3
-//
-func createMp3PathForFlacPath(path string) string {
-	return "test"
-}
-
 func isFlacFileValid(path string) (bool, error) {
 	cmdFlac := exec.Command("flac", "--test", path)
 	err := cmdFlac.Run()

@@ -9,7 +9,6 @@
 //     preset-type = [standard | medium | extreme (default) | insane]
 //
 // TODO :
-// *
 // * command line arguments
 // * MAXPROCS
 // * logging
