@@ -58,12 +58,19 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/damonallison/go-learn/greeter"
 )
 
 // current flac settings
 var presetType PresetType
 
 func main() {
+	log.Println("Hello, world!")
+	greeter.Echo("Hello, go!")
+}
+
+func mainOriginal() {
 	printGreeting()
 	printEnvironment()
 
