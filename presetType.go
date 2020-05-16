@@ -6,45 +6,37 @@ import "strings"
 type PresetType int
 
 const (
-	// Medium lame preset
-	Medium PresetType = 1 << iota // 1
 	// Standard lame preset
-	Standard PresetType = 1 << iota // 2
+	Standard PresetType = 1 << iota // 1
 	// Extreme lame preset
-	Extreme PresetType = 1 << iota // 4
+	Extreme PresetType = 1 << iota // 2
 	// Insane lame preset
-	Insane PresetType = 1 << iota // 8
+	Insane PresetType = 1 << iota // 4
 )
 
 func (t PresetType) String() string {
-	if t == Medium {
-		return "medium"
-	}
-	if t == Standard {
+	switch t {
+	case Standard:
 		return "standard"
-	}
-	if t == Extreme {
+	case Extreme:
 		return "extreme"
-	}
-	if t == Insane {
+	case Insane:
 		return "insane"
+	default:
+		return "unknown"
 	}
-	return "unknown"
 }
 
-// presetTypeFromString converts PresetType into a
-// string value to send into `flac`.
-// Defaults to Standard
+// presetTypeFromString returns a `PresetType` for a given
+// string. Defaults to Standard
 func presetTypeFromString(s string) PresetType {
-	temp := strings.ToLower(strings.Trim(s, " "))
-	if temp == Medium.String() {
-		return Medium
-	}
-	if temp == Extreme.String() {
+	temp := strings.ToLower(strings.TrimSpace(s))
+	switch temp {
+	case Extreme.String():
 		return Extreme
-	}
-	if temp == Insane.String() {
+	case Insane.String():
 		return Insane
+	default:
+		return Standard
 	}
-	return Standard
 }

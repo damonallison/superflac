@@ -9,10 +9,10 @@
 //     preset-type = [standard | medium | extreme (default) | insane]
 //
 // TODO :
-// * command line arguments
-// * MAXPROCS
-// * logging
-// *
+// * Command line arguments
+// * Concurrency: spin up MAXPROCS goroutines to encode simultaneously
+// * Need a recursive glob function similar to Ruby (or Python)
+// * Logging: Find a true logging package, not fmt.
 //
 // To understand:
 // * pkg/sync
@@ -21,18 +21,15 @@
 // * file io
 // * string formatting
 // * atos tokenizer
-// *
 
 //
+// This looks like some sample code that no longer needs to be here
+
 // log.Fatal() == os.Exit(1)
 // log.Panic() ==
 // log.Printf("(%T)%v", obj, obj)
 // log.Println(v ...interface{})
 //
-
-/*
- * TODO : need a recursive glob function similar to ruby
- */
 
 // Start walking our file path.
 // try walk, glob
@@ -58,19 +55,12 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
-
-	"github.com/damonallison/go-learn/greeter"
 )
 
-// current flac settings
-var presetType PresetType
-
+//
+// superflac insane /dir/to/encode
+//
 func main() {
-	log.Println("Hello, world!")
-	greeter.Echo("Hello, go!")
-}
-
-func mainOriginal() {
 	printGreeting()
 	printEnvironment()
 
@@ -78,19 +68,13 @@ func mainOriginal() {
 		log.Println("One or more dependencies count not be found. Install those and come back later.")
 		return
 	}
-
-	// defaults
-	dir := "/tmp/2000-04-04"
-	presetType = Extreme
-	// Parse the given argument
-
-	if len(os.Args) == 1 {
-		log.Printf("We were not given a directory. Using our default (%s)\n", dir)
+	if len(os.Args) < 3 {
+		log.Println("Usage: superflac [standard|extreme|insane] /dir/to/encode")
+		os.Exit(1)
 	}
-	if len(os.Args) > 1 {
-		dir = os.Args[1]
-		log.Printf("Superflac is starting using directory (%s)\n", dir)
-	}
+	presetType := presetTypeFromString(os.Args[1])
+	log.Printf("Using presetType: %s", presetType.String())
+
 	if len(os.Args) > 2 {
 		presetType = presetTypeFromString(os.Args[2])
 	}
