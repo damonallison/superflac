@@ -16,20 +16,10 @@
 //
 // To understand:
 // * pkg/sync
-// * panic / recover example
 // * pkg/runtime pkg/reflect
 // * file io
 // * string formatting
 // * atos tokenizer
-
-//
-// This looks like some sample code that no longer needs to be here
-
-// log.Fatal() == os.Exit(1)
-// log.Panic() ==
-// log.Printf("(%T)%v", obj, obj)
-// log.Println(v ...interface{})
-//
 
 // Start walking our file path.
 // try walk, glob
@@ -57,9 +47,8 @@ import (
 	"strings"
 )
 
-//
-// superflac insane /dir/to/encode
-//
+var presetType PresetType
+
 func main() {
 	printGreeting()
 	printEnvironment()
@@ -72,18 +61,15 @@ func main() {
 		log.Println("Usage: superflac [standard|extreme|insane] /dir/to/encode")
 		os.Exit(1)
 	}
-	presetType := presetTypeFromString(os.Args[1])
+	presetType = presetTypeFromString(os.Args[1])
 	log.Printf("Using presetType: %s", presetType.String())
-
-	if len(os.Args) > 2 {
-		presetType = presetTypeFromString(os.Args[2])
-	}
-
-	if notExists(dir) {
-		log.Fatalf("Superflac is failing '%s' does not exist.", dir)
+	dir := os.Args[2]
+	if !exists(dir) {
+		log.Fatalf("'%s' does not exist.", dir)
 	}
 
 	log.Printf("Superflac is starting. dir = (%s) presetType = (%s)", dir, presetType.String())
+	os.Exit(0)
 
 	if err := filepath.Walk(dir, walkFunc); err != nil {
 		log.Fatalf("Superflac failed with err (%v)", err)
@@ -126,7 +112,7 @@ func walkFunc(fileName string, info os.FileInfo, err error) error {
 // where it was encoded to.
 func encodeFlacToMp3(inPath string) bool {
 
-	if notExists(inPath) {
+	if !exists(inPath) {
 		log.Printf("Unable to encode file. path does not exist : %s\n", inPath)
 		return false
 	}
@@ -195,7 +181,7 @@ func encodeFlacToMp3(inPath string) bool {
 // we are not able to create a direcotry, returns false
 func ensureDir(dirPath string) bool {
 
-	if notExists(dirPath) {
+	if !exists(dirPath) {
 		log.Printf("Making directory at (%v)", dirPath)
 		err := os.MkdirAll(dirPath, 0777)
 		return err == nil
@@ -210,9 +196,9 @@ func ensureDir(dirPath string) bool {
 	return fi.IsDir()
 }
 
-func notExists(path string) bool {
+func exists(path string) bool {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return true
+		return false
 	}
-	return false
+	return true
 }
