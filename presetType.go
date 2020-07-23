@@ -1,41 +1,25 @@
 package main
 
-import "strings"
-
-// PresetType is a set of predefined constants
-type PresetType int
+// PresetType is a set of predefined lame present constants
+type PresetType string
 
 const (
-	// Standard lame preset
-	PresetTypeStandard PresetType = 1 << iota // 1
-	// Extreme lame preset
-	PresetTypeExtreme PresetType = 1 << iota // 2
-	// Insane lame preset
-	PresetTypeInsane PresetType = 1 << iota // 4
+	// PresetTypeStandard is the standard lame preset
+	//
+	// This preset should generally be transparent to most people on most music
+	// and is already quite high in quality
+	PresetTypeStandard = PresetType("standard")
+
+	// PresetTypeExtreme is the extreme lame preset
+	//
+	// If you have extremely good hearing and similar equipment, this preset
+	// will generally provide slightly higher quality than the "standard" mode.
+	PresetTypeExtreme = PresetType("extreme")
+
+	// PresetTypeInsane is the insane  lame preset
+	//
+	// This preset will usually be overkill for most people and most situations,
+	// but if you must have the absolute highest quality with no regard to
+	// filesize, this is the way to go.
+	PresetTypeInsane = PresetType("insane")
 )
-
-func (t PresetType) String() string {
-	switch t {
-	case PresetTypeStandard:
-		return "standard"
-	case PresetTypeExtreme:
-		return "extreme"
-	case PresetTypeInsane:
-		return "insane"
-	default:
-		return "unknown"
-	}
-}
-
-// presetTypeFromString returns a `PresetType` for a given
-// string. Defaults to Standard
-func presetTypeFromString(s string) PresetType {
-	switch strings.ToLower(strings.TrimSpace(s)) {
-	case PresetTypeStandard.String():
-		return PresetTypeExtreme
-	case PresetTypeInsane.String():
-		return PresetTypeInsane
-	default:
-		return PresetTypeStandard
-	}
-}

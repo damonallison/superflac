@@ -39,6 +39,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -47,29 +49,29 @@ import (
 	"strings"
 )
 
-var presetType PresetType
+var qFlag string
 
 func main() {
-	printGreeting()
-	printEnvironment()
+
+	flag.StringVar(&qFlag, "quality", string(PresetTypeExtreme), "Specifies the lame preset type to use. Possible values are 'standard', 'extreme', and 'insane'")
+	flag.Parse()
+
+	if len(flag.Args()) == 0 {
+		fmt.Printf("Usage: superflac -quality [standard|extreme|insane] /path/to/dir")
+		os.Exit(1)
+	}
+	dir := flag.Args()[0]
 
 	if !verifyDeps() {
 		log.Println("One or more dependencies count not be found. Install those and come back later.")
-		return
-	}
-	if len(os.Args) < 3 {
-		log.Println("Usage: superflac [standard|extreme|insane] /dir/to/encode")
 		os.Exit(1)
 	}
-	presetType = presetTypeFromString(os.Args[1])
-	log.Printf("Using presetType: %s", presetType.String())
-	dir := os.Args[2]
 	if !exists(dir) {
-		log.Fatalf("'%s' does not exist.", dir)
+		log.Printf("'%s' does not exist", dir)
+		os.Exit(1)
 	}
 
-	log.Printf("Superflac is starting. dir = (%s) presetType = (%s)", dir, presetType.String())
-	os.Exit(0)
+	log.Printf("Superflac is starting. dir = (%s) quality = (%s)", dir, qFlag)
 
 	if err := filepath.Walk(dir, walkFunc); err != nil {
 		log.Fatalf("Superflac failed with err (%v)", err)
@@ -82,11 +84,9 @@ func main() {
 func walkFunc(fileName string, info os.FileInfo, err error) error {
 
 	if err != nil {
-		log.Fatalln("walkFunc received an error : %v", err)
 		return err
 	}
 	if info.IsDir() {
-		log.Printf("walkFunc skipping directory at \"%v\"\n", fileName)
 		return nil
 	}
 	cleanPath := path.Clean(fileName)
@@ -160,7 +160,7 @@ func encodeFlacToMp3(inPath string) bool {
 	// Before we start the decode/encode, determine if the flac file is valid
 	cmdFlac := exec.Command("flac", "--decode", "--stdout", "--totally-silent", inPath)
 	// --quiet
-	cmdLame := exec.Command("lame", "--preset", presetType.String(), "--quiet", "-", outPath)
+	cmdLame := exec.Command("lame", "--preset", qFlag, "--quiet", "-", outPath)
 	printCmd(cmdFlac)
 	printCmd(cmdLame)
 

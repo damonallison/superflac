@@ -4,22 +4,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"os/user"
 )
-
-// printGreeting prints a welcome message for the user, preferring
-func printGreeting() {
-	u, err := user.Current()
-	if err != nil {
-		log.Fatalln("Who are you? I'm unable to find the current user.")
-		return
-	}
-	n := u.Name
-	if n == "" {
-		n = u.Username
-	}
-	log.Printf("Welcome, %v, to superflac!\n", n)
-}
 
 func printEnvironment() {
 	for i, v := range os.Args {

@@ -1,5 +1,6 @@
 # Visual Studio Code
 .vscode
+*__debug_bin
 
 # macOS
 *.DS_Store
