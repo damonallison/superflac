@@ -1,35 +1,16 @@
 package main
 
 import (
-	"log"
-	"os"
+	"fmt"
 	"os/exec"
 )
 
-func printEnvironment() {
-	for i, v := range os.Args {
-		log.Printf("Args[%d] == %s\n", i, v)
-	}
-	//
-	// OS name, version, free memory, etc..
-	//
-}
-
-func printCmd(c *exec.Cmd) {
-	log.Printf("Cmd is  : %v", c)
-	log.Printf("Path is : %v", c.Path)
-	log.Printf("Args are: %v", c.Args)
-	log.Printf("Env  is : %v", c.Env)
-
-}
-
 func verifyDep(cmd string) bool {
-	path, err := exec.LookPath(cmd)
+	_, err := exec.LookPath(cmd)
 	if err != nil {
-		log.Printf("NO... Could not find `%v`. Error: \"%v\"", cmd, err.Error())
+		fmt.Printf("could not find `%s` - did you `brew install %s`?", cmd, cmd)
 		return false
 	}
-	log.Printf("YES... Found `%v` at `%v`\n", cmd, path)
 	return true
 }
 

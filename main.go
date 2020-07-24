@@ -114,6 +114,7 @@ func encodeFlacToMp3(candidates []string, opts options) error {
 	wg := workerpool.New(runtime.NumCPU())
 
 	for _, candidate := range candidates {
+		candidate := candidate
 		wg.Submit(func() {
 			if ok, err := isFlacFileValid(candidate); !ok {
 				log.Printf("unable to encode file. `flac` says this file is invalid : %s error : %v\n", candidate, err)
@@ -140,11 +141,9 @@ func encodeFlacToMp3(candidates []string, opts options) error {
 
 			// Before we start the decode/encode, determine if the flac file is valid
 			cmdFlac := exec.Command("flac", "--decode", "--stdout", "--totally-silent", candidate)
-			// --quiet
 			cmdLame := exec.Command("lame", "--preset", string(opts.quality), "--quiet", "-", outPath)
-			printCmd(cmdFlac)
-			printCmd(cmdLame)
 
+			fmt.Printf("encoding `%s` to `%s`\n", candidate, outPath)
 			cmdLame.Stdin, _ = cmdFlac.StdoutPipe()
 			cmdLame.Stdout = os.Stdout
 			cmdLame.Stderr = os.Stderr
