@@ -1,41 +1,14 @@
-//
-// superflac
-//
-// Recursively encodes flac files into MP3
+// superflac recursively encodes flac files into MP3
 //
 // usage:
-//   $ superflac /tmp/dir [preset-type]
+//   $ superflac [-quality quality-level] /dir/to/encode
 //
-//     preset-type = [standard | medium | extreme (default) | insane]
+//   quality-level is the `lame` quality level to use when encoding. It defaults to `extreme`.
 //
-// TODO :
-// * Command line arguments
-// * Concurrency: spin up MAXPROCS goroutines to encode simultaneously
-// * Need a recursive glob function similar to Ruby (or Python)
-// * Logging: Find a true logging package, not fmt.
+//   standard: good quality
+//   extreme: excellent quality (the default)
+//   insane: as good as you can get, but probably overkill
 //
-// To understand:
-// * pkg/sync
-// * pkg/runtime pkg/reflect
-// * file io
-// * string formatting
-// * atos tokenizer
-
-// Start walking our file path.
-// try walk, glob
-// Glob() will not recurse directories.
-// We'll need walk.
-// matches, err := filepath.Glob("/tmp/test/*/*.flac")
-// if err != nil {
-// 	log.Printf("Error looking for flac files == %v\n", err)
-// 	return
-// }
-// log.Printf("glob found %v matches\n", len(matches))
-//
-// for _, v := range matches {
-// 	log.Printf("found flac file at %v\n", v)
-// }
-
 package main
 
 import (
